@@ -15,7 +15,7 @@ class Music():
         to_UTF8 = str(res.content, "utf-8")
         to_json = json.loads(to_UTF8)
         return to_json
-params = {
-    "keywords":"好久不见"
-}
-print(Music().GET_DICT('search',params))
+# params = {
+#     "keywords":"好久不见"
+# }
+# print(Music().GET_DICT('search',params))
