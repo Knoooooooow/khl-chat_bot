@@ -2,7 +2,7 @@ import json
 from datetime import datetime, timedelta
 
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
-from khl import Message, Bot
+from khl import Message, Bot, EventTypes, Event
 
 # load config from config/config.json, replace `path` to your own config file
 # config template: `./config/config.json.example`
@@ -61,6 +61,11 @@ async def button(msg: Message):
 @bot.command()
 async def struct(msg: Message):
     await msg.reply(CardMessage(Card(Module.Section(Struct.Paragraph(3, 'a', 'b', 'c')))))
+
+
+@bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
+async def print_btn_value(_: Bot, e: Event):
+    print(f'''{e.body['user_info']['nickname']} took the {e.body['value']} pill''')
 
 # everything done, go ahead now!
 bot.run()
