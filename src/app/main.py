@@ -33,14 +33,14 @@ async def minfo(msg: Message, text):
         "keywords": text
     }
     result = Music163().GET_DICT('search', params)
-    top = result.songs[0]
-    name = top.name
-    artists = top.artists
-    album = top.album
+    top = result['songs'][0]
+    name = top['name']
+    artists = top['artists']
+    album = top['album']
     artists_name = ''
-    album_name = album.name
+    album_name = album['name']
     for x in artists:
-        artists_name = artists_name + x.name + ' '
+        artists_name = artists_name + x['name'] + ' '
     await msg.reply(
         CardMessage(
             Card(
