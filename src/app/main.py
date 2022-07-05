@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
 from khl import Message, Bot, EventTypes, Event
 
-from app.music import Music
+from music import Music
 
 # load config from config/config.json, replace `path` to your own config file
 # config template: `./config/config.json.example`
