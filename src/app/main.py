@@ -1,11 +1,11 @@
-import json
+import json ,requests
 from datetime import datetime, timedelta
 
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
 from khl import Message, Bot, EventTypes, Event
 
-from music import Music
 
+# from library.music163 import Music163
 # load config from config/config.json, replace `path` to your own config file
 # config template: `./config/config.json.example`
 with open('../config/config.json', 'r', encoding='utf-8') as f:
@@ -23,7 +23,7 @@ async def m(msg: Message, name):
     params = {
         "keywords": name
     }
-    Music().GET_DICT('search', params)
+    Music163().GET_DICT('search', params)
     await msg.reply('您想点的歌曲为: {name}')
 
 
@@ -32,7 +32,7 @@ async def minfo(msg: Message, text):
     params = {
         "keywords": text
     }
-    result = Music().GET_DICT('search', params)
+    result = Music163().GET_DICT('search', params)
     top = result.songs[0]
     name = top.name
     artists = top.artists
@@ -104,6 +104,20 @@ async def struct(msg: Message):
 async def print_btn_value(_: Bot, e: Event):
     print(
         f'''{e.body['user_info']['nickname']} took the {e.body['value']} pill''')
+
+api = config['music_163']['proxy']
+
+
+class Music163():
+
+    def GET_DICT(self,url,params = {}):
+        url = api + url
+        res = requests.get(url=url,params = params)
+        to_UTF8 = str(res.content, "utf-8")
+        to_json = json.loads(to_UTF8)
+        return to_json
+
+
 
 # everything done, go ahead now!
 bot.run()

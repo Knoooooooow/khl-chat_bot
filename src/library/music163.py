@@ -4,10 +4,10 @@ import json
 with open('../config/config.json', 'r', encoding='utf-8') as f:
     config = json.load(f)
 
-api = config.music_163.proxy
+api = config['music_163']['proxy']
 
 
-class Music():
+class Music163():
 
     def GET_DICT(self,url,params = {}):
         url = api + url
