@@ -33,8 +33,7 @@ async def minfo(msg: Message, text):
         "keywords": text
     }
     result = Music163().GET_DICT('search', params)
-    print(result)
-    top = result['songs'][0]
+    top = result['result']['songs'][0]
     name = top['name']
     artists = top['artists']
     album = top['album']
