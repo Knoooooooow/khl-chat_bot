@@ -19,7 +19,7 @@ class Music163():
         if self.cookie !='':
             headers['cookie'] = self.cookie
 
-        res = requests.get(url=url,params = params,headers = headers)
+        res = requests.get(url=url,params = params,headers = headers,timeout=20000)
         to_UTF8 = str(res.content, "utf-8")
         to_json = json.loads(to_UTF8)
         return to_json
