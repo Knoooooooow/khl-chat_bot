@@ -1,5 +1,6 @@
 import json 
 from datetime import datetime, timedelta
+from msilib.schema import File
 
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
 from khl import Message, Bot, EventTypes, Event
@@ -13,18 +14,6 @@ with open('../config/config.json', 'r', encoding='utf-8') as f:
 
 # init Bot
 bot = Bot(token=config['token'])
-
-
-# register command
-# saying `!m 好久不见` in channel
-# or `/m 好久不见`
-@bot.command()
-async def m(msg: Message, name):
-    params = {
-        "keywords": name
-    }
-    Music163().GET_DICT('search', params)
-    await msg.reply('您想点的歌曲为: {name}')
 
 
 @bot.command()
@@ -52,26 +41,42 @@ async def minfo(msg: Message, text):
         )
     )
 
-
 @bot.command()
-async def countdown(msg: Message):
-    cm = CardMessage()
+async def mcard(msg: Message,*text):
+    text_str = ''
+    for x in text:
+        text_str = text_str + x + ' '
+    params = {
+        "keywords": text_str
+    }
+    search_result = Music163().GET_DICT('search', params)
+    top = search_result['result']['songs'][0]
+    top_id = top['id']
+    result = Music163().GET_DICT('song/url', {'id':top_id})
+    result_detail = Music163().GET_DICT('song/detail', {'ids':top_id})
+    url = result['data'][0]['url']
+    pic_url = result_detail['songs'][0]['al']['picUrl']
+    artists = top['artists']
+    artists_name = ''
+    for x in artists:
+        artists_name = artists_name + x['name'] + ' '
+    
+    await msg.reply(
+        CardMessage(
+            Card(
+                Module.Section(
+                    text = top['name'] + '        by :  ' + artists_name,
+                    mode = Types.SectionMode.LEFT,
+                    accessory = Element.Image(src = pic_url)
+                    ),
+                Module.Divider(),
+                Module.File(type=Types.File.AUDIO,src=url)
+            )
+        )
+    )
 
-    # color=(90,59,215) is another available form
-    c1 = Card(Module.Header('Countdown example'), color='#5A3BD7')
-    c1.append(Module.Divider())
-    c1.append(Module.Countdown(datetime.now() +
-              timedelta(hours=1), mode=Types.CountdownMode.SECOND))
-    cm.append(c1)
 
-    # priority: color > theme, default: Type.Theme.PRIMARY
-    c2 = Card(theme=Types.Theme.DANGER)
-    c2.append(Module.Section('the DAY style countdown'))
-    c2.append(Module.Countdown(datetime.now() +
-              timedelta(hours=1), mode=Types.CountdownMode.DAY))
-    cm.append(c2)  # A CardMessage can contain up to 5 Cards
 
-    await msg.reply(cm)
 
 
 # button example, build a card in a single statement
@@ -91,13 +96,8 @@ async def button(msg: Message):
                 Module.Section(
                     'another kind of button, user will goto the link when clicks the button:',
                     # LINK type: user will open the link in browser when clicked
-                    Element.Button('link button', 'https://github.com/TWT233/khl.py', Types.Click.LINK)))))
+                    Element.Button('link button', 'https://github.com/Knoooooooow/khl-chat_bot', Types.Click.LINK)))))
 
-
-# struct example
-@bot.command()
-async def struct(msg: Message):
-    await msg.reply(CardMessage(Card(Module.Section(Struct.Paragraph(3, 'a', 'b', 'c')))))
 
 
 @bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
