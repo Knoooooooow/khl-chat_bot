@@ -59,7 +59,8 @@ async def mcard(msg: Message,*text):
     artists = top['artists']
     artists_name = ''
     for x in artists:
-        artists_name = artists_name + x['name'] + '/'
+        artists_name = artists_name + x['name'] + ' / '
+    artists_name = artists_name.strip(' ')
     artists_name = artists_name.strip('/')
     await msg.reply(
         CardMessage(
