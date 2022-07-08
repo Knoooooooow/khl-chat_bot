@@ -19,7 +19,7 @@ bot = Bot(token=config['token'])
 @bot.command()
 async def 卖个萌(msg: Message):
     meng = config['data']['meng']
-    meng_int = random.randint(0,len(meng))
+    meng_int = random.randint(0,len(meng) -1)
     await msg.reply(meng[meng_int]['text'])
 
 @bot.command()
