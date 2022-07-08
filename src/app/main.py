@@ -1,4 +1,4 @@
-import json 
+import json ,random
 from datetime import datetime, timedelta
 from msilib.schema import File
 
@@ -17,29 +17,10 @@ bot = Bot(token=config['token'])
 
 
 @bot.command()
-async def minfo(msg: Message, text):
-    params = {
-        "keywords": text
-    }
-    result = Music163().GET_DICT('search', params)
-    top = result['result']['songs'][0]
-    name = top['name']
-    artists = top['artists']
-    album = top['album']
-    artists_name = ''
-    album_name = album['name']
-    for x in artists:
-        artists_name = artists_name + x['name'] + ' '
-    await msg.reply(
-        CardMessage(
-            Card(
-                Module.Header(name),
-                Module.Context(artists_name),
-                Module.Divider(),
-                Module.Section(album_name)
-            )
-        )
-    )
+async def 卖个萌(msg: Message):
+    meng = config['data']['meng']
+    meng_int = random.randint(0,len(meng))
+    await msg.reply(meng[meng_int]['text'])
 
 @bot.command()
 async def mcard(msg: Message,*text):
