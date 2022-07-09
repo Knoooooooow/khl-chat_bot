@@ -33,7 +33,7 @@ async def mcard(msg: Message,*text):
     search_result = Music163().GET_DICT('search', params)
     top = search_result['result']['songs'][0]
     top_id = top['id']
-    result = Music163().GET_DICT('song/url', {'id':top_id})
+    result = Music163().GET_DICT('song/url', {'id':top_id,'br':320000})
     result_detail = Music163().GET_DICT('song/detail', {'ids':top_id})
     url = result['data'][0]['url']
     pic_url = result_detail['songs'][0]['al']['picUrl']
