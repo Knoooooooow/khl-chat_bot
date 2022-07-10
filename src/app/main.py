@@ -1,4 +1,5 @@
-import json ,random
+import json
+import random
 from datetime import datetime, timedelta
 from msilib.schema import File
 
@@ -19,11 +20,52 @@ bot = Bot(token=config['token'])
 @bot.command()
 async def 卖个萌(msg: Message):
     meng = config['data']['meng']
-    meng_int = random.randint(0,len(meng) -1)
+    meng_int = random.randint(0, len(meng) - 1)
     await msg.reply(meng[meng_int]['text'])
 
+
 @bot.command()
-async def mcard(msg: Message,*text):
+async def msearch(msg: Message, *text):
+    text_str = ''
+    for x in text:
+        text_str = text_str + x + ' '
+    params = {
+        "keywords": text_str
+    }
+    search_result = Music163().GET_DICT('search', params)
+    list = search_result['result']['songs']
+
+    showList = []
+    for x in list:
+        artists = x['artists']
+        artists_name = ''
+        for y in artists:
+            artists_name = artists_name + y['name'] + ' / '
+        artists_name = artists_name.strip(' ')
+        artists_name = artists_name.strip('/')
+
+        btn_value = {}
+        btn_value['type'] = "music_163_%s" % 'mcard'
+        btn_value['value'] = {"id": x['id']}
+        showList.append(
+            {"id": x['id'], "name": x['name'], "artists_name": artists_name, "btn_value": str(btn_value)})
+
+    await msg.reply(
+        CardMessage(
+            Card(
+                Module.Section(
+                    text=Element.Text("**"+showList[0]['name']+"**" + '    ' + r'`' +
+                                      showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
+                    mode=Types.SectionMode.LEFT,
+                    accessory=Element.Button('是这首', showList[0]['btn_value'], Types.Click.RETURN_VAL)),
+            ),
+            Module.Divider()
+        )
+    )
+
+
+@ bot.command()
+async def mcard(msg: Message, *text):
     text_str = ''
     for x in text:
         text_str = text_str + x + ' '
@@ -33,8 +75,8 @@ async def mcard(msg: Message,*text):
     search_result = Music163().GET_DICT('search', params)
     top = search_result['result']['songs'][0]
     top_id = top['id']
-    result = Music163().GET_DICT('song/url', {'id':top_id,'br':320000})
-    result_detail = Music163().GET_DICT('song/detail', {'ids':top_id})
+    result = Music163().GET_DICT('song/url', {'id': top_id, 'br': 320000})
+    result_detail = Music163().GET_DICT('song/detail', {'ids': top_id})
     url = result['data'][0]['url']
     pic_url = result_detail['songs'][0]['al']['picUrl']
     artists = top['artists']
@@ -47,45 +89,24 @@ async def mcard(msg: Message,*text):
         CardMessage(
             Card(
                 Module.Section(
-                    text = Struct.Paragraph(1, Element.Text("**"+top['name']+"**" +'    ' + r'`' + artists_name + r'`',type = Types.Text.KMD)),
-                    mode = Types.SectionMode.LEFT,
-                    accessory = Element.Image(src = pic_url)
-                    ),
+                    text=Struct.Paragraph(1, Element.Text(
+                        "**"+top['name']+"**" + '    ' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
+                    mode=Types.SectionMode.LEFT,
+                    accessory=Element.Image(src=pic_url)
+                ),
                 Module.Divider(),
-                Module.File(type=Types.File.AUDIO,src=url)
+                Module.File(type=Types.File.AUDIO, src=url)
             )
         )
     )
 
 
-
-
-
-# button example, build a card in a single statement
-# btw, short code without readability is not recommended
-@bot.command()
-async def button(msg: Message):
-    await msg.reply(
-        CardMessage(
-            Card(
-                Module.Header('An example for button'),
-                Module.Context('Take a pill, take the choice'),
-                Module.ActionGroup(
-                    # RETURN_VAL type(default): send an event when clicked, see print_btn_value() defined at L58
-                    Element.Button('Truth', 'RED', theme=Types.Theme.DANGER),
-                    Element.Button('Wonderland', 'BLUE', Types.Click.RETURN_VAL)),
-                Module.Divider(),
-                Module.Section(
-                    'another kind of button, user will goto the link when clicks the button:',
-                    # LINK type: user will open the link in browser when clicked
-                    Element.Button('link button', 'https://github.com/Knoooooooow/khl-chat_bot', Types.Click.LINK)))))
-
-
-
-@bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
+@ bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
 async def print_btn_value(_: Bot, e: Event):
-    print(
-        f'''{e.body['user_info']['nickname']} took the {e.body['value']} pill''')
+    value_str = e.body['value']
+    value = eval(value_str)
+    if value['type'] == "music_163_%s" % 'mcard':
+        print(value)
 
 
 # everything done, go ahead now!
