@@ -50,18 +50,17 @@ async def msearch(msg: Message, *text):
         showList.append(
             {"id": x['id'], "name": x['name'], "artists_name": artists_name, "btn_value": str(btn_value)})
 
-    await msg.reply(
-        CardMessage(
-            Card(
-                Module.Section(
-                    text=Element.Text("**"+showList[0]['name']+"**" + '    ' + r'`' +
-                                      showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
-                    mode=Types.SectionMode.LEFT,
-                    accessory=Element.Button('是这首', showList[0]['btn_value'], Types.Click.RETURN_VAL)),
-            ),
-            Module.Divider()
+    await msg.reply(CardMessage(Card(
+
+        Module.Section(
+            text=Element.Text("**"+showList[0]['name']+"**" + '    ' + r'`' +
+                                showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
+            mode=Types.SectionMode.LEFT,
+            accessory=Element.Button('是这首', showList[0]['btn_value'], Types.Click.RETURN_VAL)
         )
+
     )
+    ))
 
 
 @ bot.command()
