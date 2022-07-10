@@ -101,11 +101,14 @@ async def mcard(msg: Message, *text):
 
 
 @ bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
-async def print_btn_value(_: Bot, e: Event):
+async def print_btn_value(b: Bot, e: Event):
     value_str = e.body['value']
     value = eval(value_str)
+    channel = await b.fetch_public_channel(e.body['target_id'])
     if value['type'] == "music_163_%s" % 'mcard':
         print(value)
+        await b.send(channel,'123')
+    
 
 
 # everything done, go ahead now!
