@@ -61,23 +61,31 @@ async def msearch(msg: Message, *text):
             text=Element.Text("**"+showList[0]['name']+"**" + '    ' + r'`' +
                                 showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('是这首', showList[0]['btn_value'], Types.Click.RETURN_VAL)
-        ),Module.Section(
+            accessory=Element.Button('我要听这个！', showList[0]['btn_value'], Types.Click.RETURN_VAL)
+        ),
+        Module.Divider(),
+        Module.Section(
             text=Element.Text("**"+showList[1]['name']+"**" + '    ' + r'`' +
                                 showList[1]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[1]['btn_value'], Types.Click.RETURN_VAL)
-        ),Module.Section(
+        ),
+        Module.Divider(),
+        Module.Section(
             text=Element.Text("**"+showList[2]['name']+"**" + '    ' + r'`' +
                                 showList[2]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[2]['btn_value'], Types.Click.RETURN_VAL)
-        ),Module.Section(
+        ),
+        Module.Divider(),
+        Module.Section(
             text=Element.Text("**"+showList[3]['name']+"**" + '    ' + r'`' +
                                 showList[3]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[3]['btn_value'], Types.Click.RETURN_VAL)
-        ),Module.Section(
+        ),
+        Module.Divider(),
+        Module.Section(
             text=Element.Text("**"+showList[4]['name']+"**" + '    ' + r'`' +
                                 showList[4]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
