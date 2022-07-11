@@ -58,35 +58,35 @@ async def msearch(msg: Message, *text):
     await msg.reply(CardMessage(Card(
 
         Module.Section(
-            text=Element.Text("**"+showList[0]['name']+"**" + '    ' + r'`' +
+            text=Element.Text("**"+showList[0]['name']+"**" + '\n' + r'`' +
                                 showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('我要听这个！', showList[0]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
-            text=Element.Text("**"+showList[1]['name']+"**" + '    ' + r'`' +
+            text=Element.Text("**"+showList[1]['name']+"**" + '\n' + r'`' +
                                 showList[1]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[1]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
-            text=Element.Text("**"+showList[2]['name']+"**" + '    ' + r'`' +
+            text=Element.Text("**"+showList[2]['name']+"**" + '\n' + r'`' +
                                 showList[2]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[2]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
-            text=Element.Text("**"+showList[3]['name']+"**" + '    ' + r'`' +
+            text=Element.Text("**"+showList[3]['name']+"**" + '\n' + r'`' +
                                 showList[3]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[3]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
-            text=Element.Text("**"+showList[4]['name']+"**" + '    ' + r'`' +
+            text=Element.Text("**"+showList[4]['name']+"**" + '\n' + r'`' +
                                 showList[4]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
             accessory=Element.Button('是这首', showList[4]['btn_value'], Types.Click.RETURN_VAL)
@@ -122,7 +122,7 @@ async def mcard(msg: Message, *text):
             Card(
                 Module.Section(
                     text=Struct.Paragraph(1, Element.Text(
-                        "**"+top['name']+"**" + '    ' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
+                        "**"+top['name']+"**" + '\n' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
                     mode=Types.SectionMode.LEFT,
                     accessory=Element.Image(src=pic_url)
                 ),
@@ -152,7 +152,7 @@ async def print_btn_value(b: Bot, e: Event):
             Card(
                 Module.Section(
                     text=Struct.Paragraph(1, Element.Text(
-                        "**"+name+"**" + '    ' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
+                        "**"+name+"**" + '\n' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
                     mode=Types.SectionMode.LEFT,
                     accessory=Element.Image(src=pic_url)
                 ),
