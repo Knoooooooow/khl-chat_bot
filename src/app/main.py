@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from msilib.schema import File
 
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
-from khl import Message, Bot, EventTypes, Event
+from khl import Message, Bot, EventTypes, Event, MessageTypes
 
 
 from src.library.music163 import Music163
@@ -44,9 +44,14 @@ async def msearch(msg: Message, *text):
         artists_name = artists_name.strip(' ')
         artists_name = artists_name.strip('/')
 
-        btn_value = {}
+        btn_value = {
+            "type":"music_163_%s" % 'mcard',
+            "value":{}
+        }
         btn_value['type'] = "music_163_%s" % 'mcard'
-        btn_value['value'] = {"id": x['id']}
+        btn_value['value']['id'] = x['id']
+        btn_value['value']['name'] = x['name']
+        btn_value['value']['artists_name'] = artists_name
         showList.append(
             {"id": x['id'], "name": x['name'], "artists_name": artists_name, "btn_value": str(btn_value)})
 
@@ -106,8 +111,27 @@ async def print_btn_value(b: Bot, e: Event):
     value = eval(value_str)
     channel = await b.fetch_public_channel(e.body['target_id'])
     if value['type'] == "music_163_%s" % 'mcard':
-        print(value)
-        await b.send(channel,'123')
+        payload = value['value']
+        print(payload)
+        top_id = payload['id']
+        name = payload['name']
+        artists_name = payload['artists_name']
+        result = Music163().GET_DICT('song/url', {'id': top_id, 'br': 320000})
+        result_detail = Music163().GET_DICT('song/detail', {'ids': top_id})
+        url = result['data'][0]['url']
+        pic_url = result_detail['songs'][0]['al']['picUrl']
+        await b.send(channel,content= CardMessage(
+            Card(
+                Module.Section(
+                    text=Struct.Paragraph(1, Element.Text(
+                        "**"+name+"**" + '    ' + r'`' + artists_name + r'`', type=Types.Text.KMD)),
+                    mode=Types.SectionMode.LEFT,
+                    accessory=Element.Image(src=pic_url)
+                ),
+                Module.Divider(),
+                Module.File(type=Types.File.AUDIO, src=url)
+            )
+        ),type=MessageTypes.CARD)
     
 
 
