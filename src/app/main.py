@@ -5,7 +5,7 @@ from msilib.schema import File
 
 from khl.card import CardMessage, Card, Module, Element, Types, Struct
 from khl import Message, Bot, EventTypes, Event, MessageTypes
-from library.roll_tools_api import Roll_Tools_API
+from src.library.roll_tools_api import Roll_Tools_API
 
 
 from src.library.music163 import Music163
@@ -137,7 +137,7 @@ async def mcard(msg: Message, *text):
 @ bot.command()
 async def history_today(msg: Message):
     result = Roll_Tools_API().GET_DICT('history/today')
-    
+    print(result)
 
 
 @ bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
