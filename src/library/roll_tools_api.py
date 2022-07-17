@@ -10,11 +10,11 @@ api = config['roll_tools_api']
 
 class Roll_Tools_API():
     history_today = "history/today"
-    url = api['proxy']
+    url_prefix = api['proxy']
     app_id = api['app_id']
     app_secret = api['app_secret']
     def GET_DICT(self,url,params = {},headers = {}):
-        url = api + url
+        url = self.url_prefix + url
         params['app_id'] = self.app_id
         params['app_secret'] = self.app_secret
 
