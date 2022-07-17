@@ -136,7 +136,8 @@ async def mcard(msg: Message, *text):
 
 @ bot.command()
 async def history_today(msg: Message):
-    result = JUHE_API().GET_DICT('todayOnhistory/queryEvent.php')
+    yd = str(datetime.now().month) + '/' + str(datetime.now().day)
+    result = JUHE_API().GET_DICT('todayOnhistory/queryEvent.php',{"date":yd})
     print(result)
 
 
