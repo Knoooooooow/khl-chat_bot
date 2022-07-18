@@ -46,8 +46,8 @@ async def msearch(msg: Message, *text):
         artists_name = artists_name.strip('/')
 
         btn_value = {
-            "type":"music_163_%s" % 'mcard',
-            "value":{}
+            "type": "music_163_%s" % 'mcard',
+            "value": {}
         }
         btn_value['type'] = "music_163_%s" % 'mcard'
         btn_value['value']['id'] = x['id']
@@ -62,35 +62,40 @@ async def msearch(msg: Message, *text):
             text=Element.Text("**"+showList[0]['name']+"**" + '\n' + r'`' +
                                 showList[0]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('我要听这个！', showList[0]['btn_value'], Types.Click.RETURN_VAL)
+            accessory=Element.Button(
+                '我要听这个！', showList[0]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
             text=Element.Text("**"+showList[1]['name']+"**" + '\n' + r'`' +
-                                showList[1]['artists_name'] + r'`', type=Types.Text.KMD),
+                              showList[1]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('是这首', showList[1]['btn_value'], Types.Click.RETURN_VAL)
+            accessory=Element.Button(
+                '是这首', showList[1]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
             text=Element.Text("**"+showList[2]['name']+"**" + '\n' + r'`' +
-                                showList[2]['artists_name'] + r'`', type=Types.Text.KMD),
+                              showList[2]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('是这首', showList[2]['btn_value'], Types.Click.RETURN_VAL)
+            accessory=Element.Button(
+                '是这首', showList[2]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
             text=Element.Text("**"+showList[3]['name']+"**" + '\n' + r'`' +
-                                showList[3]['artists_name'] + r'`', type=Types.Text.KMD),
+                              showList[3]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('是这首', showList[3]['btn_value'], Types.Click.RETURN_VAL)
+            accessory=Element.Button(
+                '是这首', showList[3]['btn_value'], Types.Click.RETURN_VAL)
         ),
         Module.Divider(),
         Module.Section(
             text=Element.Text("**"+showList[4]['name']+"**" + '\n' + r'`' +
-                                showList[4]['artists_name'] + r'`', type=Types.Text.KMD),
+                              showList[4]['artists_name'] + r'`', type=Types.Text.KMD),
             mode=Types.SectionMode.LEFT,
-            accessory=Element.Button('是这首', showList[4]['btn_value'], Types.Click.RETURN_VAL)
+            accessory=Element.Button(
+                '是这首', showList[4]['btn_value'], Types.Click.RETURN_VAL)
         ),
 
     )
@@ -137,8 +142,29 @@ async def mcard(msg: Message, *text):
 @ bot.command()
 async def history_today(msg: Message):
     yd = str(datetime.now().month) + '/' + str(datetime.now().day)
-    result = JUHE_API().GET_DICT('todayOnhistory/queryEvent.php',{"date":yd})
-    print(result)
+    body = JUHE_API().GET_DICT('todayOnhistory/queryEvent.php',{"date":yd})
+    
+    result = body['result']
+    result.reverse()
+    result_3_30 = [result[0:9], result[10:19], result[20:29]]
+    cm = CardMessage()
+
+    for x3 in result_3_30:
+        card = Card()
+        for x15 in x3:
+            card.append(
+                Module.Header(x15['date'])
+            )
+            card.append(Module.Section(
+                text=Element.Text(
+                        "**"+x15['title']+"**", type=Types.Text.KMD),
+                mode=Types.SectionMode.LEFT,
+                accessory=Element.Button(
+                    '去百度看看', 'https://www.baidu.com/s?wd=%s' % x15['title'], Types.Click.LINK)
+            ))
+            card.append(Module.Divider())
+        cm.append(card)
+    await msg.reply(cm)
 
 
 @ bot.on_event(EventTypes.MESSAGE_BTN_CLICK)
@@ -156,7 +182,7 @@ async def print_btn_value(b: Bot, e: Event):
         result_detail = Music163().GET_DICT('song/detail', {'ids': top_id})
         url = result['data'][0]['url']
         pic_url = result_detail['songs'][0]['al']['picUrl']
-        await b.send(channel,content= CardMessage(
+        await b.send(channel, content=CardMessage(
             Card(
                 Module.Section(
                     text=Struct.Paragraph(1, Element.Text(
@@ -167,8 +193,7 @@ async def print_btn_value(b: Bot, e: Event):
                 Module.Divider(),
                 Module.File(type=Types.File.AUDIO, src=url)
             )
-        ),type=MessageTypes.CARD)
-    
+        ), type=MessageTypes.CARD)
 
 
 # everything done, go ahead now!
